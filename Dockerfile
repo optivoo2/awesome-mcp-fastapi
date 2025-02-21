@@ -3,18 +3,32 @@ FROM python:3.13-slim
 ENV PYTHONUNBUFFERED=true
 WORKDIR /app
 
-RUN apt-get update && apt-get -y install libpq-dev gcc libcairo2-dev
+# Install system dependencies
+RUN apt-get update && apt-get -y install --no-install-recommends \
+    libpq-dev \
+    gcc \
+    libcairo2-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY /requirements.txt .
-COPY .env .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install uv
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
-COPY /src/ ./src/
+# Copy dependency files
+COPY pyproject.toml uv.lock .env ./
 
+# Install dependencies using uv
+RUN uv pip install --no-cache --system -e .
+
+# Copy application code
+COPY src/ ./src/
+
+# Set environment variables
 ENV PYTHONPATH=/app
 ENV PORT=8000
 ENV $(cat .env | xargs)
 
+# Expose the application port
 EXPOSE 8000
 
+# Run the application
 CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]

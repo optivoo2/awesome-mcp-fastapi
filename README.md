@@ -30,18 +30,14 @@ Our implementation improves upon the standard MCP tool registry by:
 
 ### Additional Features
 
-- **Database Integration**: Built-in support for PostgreSQL and vector database (Qdrant) connections.
 - **CORS Support**: Ready for cross-origin requests, making it easy to integrate with web applications.
 - **Lifespan Management**: Proper resource initialization and cleanup through FastAPI's lifespan API.
-- **WebSocket Support**: Capability for real-time communication alongside the standard MCP protocol.
 
 ## Getting Started
 
 ### Prerequisites
 
 - Python 3.10+
-- PostgreSQL (optional)
-- Qdrant (optional for vector storage)
 
 ### Installation
 
@@ -56,16 +52,6 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # Install dependencies
 pip install -e .
-```
-
-### Environment Configuration
-
-Create a `.env` file in the root directory with your configuration:
-
-```
-DATABASE_URL=postgresql://user:password@localhost:5432/dbname
-QDRANT_URL=http://localhost:6333
-API_KEY=your_api_key
 ```
 
 ### Running the Server

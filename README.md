@@ -24,7 +24,7 @@ uv venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # Install dependencies with uv
-uv pip install -r requirements.txt
+uv sync
 
 # Run the development server
 uvicorn src.main:app --reload

@@ -9,13 +9,7 @@ class Settings(BaseSettings):
 
     ALLOWED_ORIGINS: List[str]
     ENVIRONMENT: str = "development"
-    OPENAI_API_KEY: str
-    GROQ_API_KEY: str
-    GEMINI_API_KEY: str
-    QDRANT_URL: str
-    QDRANT_API_KEY: str
-    POSTGRES_DATABASE_URL: str
-    MONGODB_URL: str
+    # Add More here
 
 
 settings = Settings()

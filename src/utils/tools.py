@@ -436,12 +436,6 @@ class ToolRegistry:
             # First priority: Look for response_model in route decorator
             response_model = self._extract_response_model(current_func, func)
             
-            # Get docstring for description
-            doc = inspect.getdoc(current_func)
-            doc_description = None
-            if doc:
-                doc_description = doc.split("\n")[0].strip()
-            
             # Determine which model to use for schema generation
             if response_model is not None:
                 logger.debug(f"Using response_model from route decorator: {response_model}")
@@ -450,40 +444,15 @@ class ToolRegistry:
                 logger.debug(f"Using return type annotation: {return_type}")
                 model_type = return_type
             else:
-                # No type annotation, use a generic object schema with docstring if available
-                description = doc_description or "Response object"
+                # Get docstring if available
+                doc = inspect.getdoc(current_func)
+                if doc:
+                    description = doc.split("\n")[0]
+                else:
+                    description = "Response object"
+                    
                 logger.debug(f"No return type information available, using generic schema")
                 return {"type": "object", "description": description}, None
-
-            # Handle Dict/Dictionary return types specially
-            if model_type is dict or model_type is Dict or get_origin(model_type) is dict:
-                # Check if it's a generic Dict or has type arguments
-                if get_origin(model_type) is dict and len(get_args(model_type)) == 2:
-                    key_type, value_type = get_args(model_type)
-                    key_schema, key_example = self._type_to_schema(key_type)
-                    value_schema, value_example = self._type_to_schema(value_type)
-                    
-                    schema = {
-                        "type": "object",
-                        "additionalProperties": value_schema,
-                        "description": doc_description or f"Dictionary with {key_type.__name__} keys and {value_schema.get('description', 'values')}"
-                    }
-                    
-                    # Create an example with the key and value
-                    example = {}
-                    if key_example is not None and value_example is not None:
-                        # Convert key to string (JSON keys must be strings)
-                        str_key = str(key_example)
-                        example[str_key] = value_example
-                    
-                    return schema, example
-                else:
-                    # For plain Dict or Dict without type args, return a generic dictionary schema
-                    return {
-                        "type": "object", 
-                        "description": doc_description or "Dictionary response",
-                        "additionalProperties": True
-                    }, {"example_key": "example_value"}
 
             # Handle Pydantic models
             if hasattr(model_type, "model_json_schema"):
@@ -494,8 +463,10 @@ class ToolRegistry:
                 
                 # Add description if available
                 if "description" not in schema:
-                    if doc_description:
-                        schema["description"] = doc_description
+                    if hasattr(model_type, "__doc__") and model_type.__doc__:
+                        doc = model_type.__doc__.strip()
+                        if doc:
+                            schema["description"] = doc
                     elif "title" in schema:
                         schema["description"] = f"{schema['title']} response"
                 
@@ -508,8 +479,12 @@ class ToolRegistry:
             schema, example = self._type_to_schema(model_type)
             
             # Add description from docstring if available
-            if "description" not in schema and doc_description:
-                schema["description"] = doc_description
+            if "description" not in schema:
+                doc = inspect.getdoc(current_func)
+                if doc:
+                    first_line = doc.split("\n")[0].strip()
+                    if first_line:
+                        schema["description"] = first_line
                         
             return schema, example
         

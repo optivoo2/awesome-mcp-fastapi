@@ -1,4 +1,4 @@
-![Deploy MkDocs](https://github.com/MR-GREEN1337/awesome-mcp-fastapi/actions/workflows/deploy-docs.yml/badge.svg)
+![Deploy MkDocs](https://github.com/MR-GREEN1337/awesome-mcp-fastapi/actions/workflows/pages-build-deployment.yml/badge.svg)
 
 # Awesome MCP FastAPI
 

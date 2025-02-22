@@ -1,3 +1,5 @@
+![Deploy MkDocs](https://github.com/MR-GREEN1337/awesome-mcp-fastapi/actions/workflows/deploy-docs.yml/badge.svg)
+
 # Awesome MCP FastAPI
 
 A powerful FastAPI-based implementation of the Model Context Protocol (MCP) with enhanced tool registry capabilities, leveraging the mature FastAPI ecosystem.

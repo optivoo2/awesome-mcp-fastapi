@@ -25,4 +25,5 @@ bind_app_tools(app)
 @auto_tool(name="Health Check" ,description="Health Check")
 @app.get("/")
 async def health_check() -> Dict[str, Any]:
+    """Health Check Definition"""
     return {"All Good": "All good"}

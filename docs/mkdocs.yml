@@ -1,0 +1,5 @@
+site_name: Project Documentation
+theme: readthedocs
+
+nav:
+  - Home: index.md

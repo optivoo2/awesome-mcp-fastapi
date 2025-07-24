@@ -2,17 +2,18 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Dict, Any, List, Optional
 from src.utils import lifespan
-
-# Import the improved tool registry
+from src.core.settings import settings
+ 
+ # Import the improved tool registry
 from src.utils.tools import bind_app_tools, auto_tool
-
-# Create the FastAPI app
-app = FastAPI(title="Tool Registry Demo", lifespan=lifespan)
-
-# Add CORS middleware
+ 
+ # Create the FastAPI app
+app = FastAPI(title=settings.PROJECT_NAME, lifespan=lifespan)
+ 
+ # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

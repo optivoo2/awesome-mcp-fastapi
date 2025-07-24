@@ -6,12 +6,14 @@ WORKDIR /app
 # Install system dependencies
 RUN apt-get update && apt-get -y install --no-install-recommends \
     libpq-dev \
+    curl \
     gcc \
     libcairo2-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install uv
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.cargo/bin:${PATH}"
 
 # Copy dependency files
 COPY pyproject.toml uv.lock ./
